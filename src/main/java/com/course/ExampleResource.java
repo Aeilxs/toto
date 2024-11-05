@@ -51,6 +51,7 @@ public class ExampleResource {
         ObjectMapper objectMapper = new ObjectMapper();
         List<CharacterModel> list = objectMapper.readerForListOf(CharacterModel.class).readValue(getClass().getClassLoader().getResourceAsStream("hp.json"));
         for (CharacterModel characterModel : list) {
+            characterModel.getAttributes().persist();
             characterModel.persist();
         }
     }
