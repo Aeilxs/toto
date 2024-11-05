@@ -82,8 +82,9 @@ public class ExampleResource {
     }
 
 
-//    //GET on species/{specie}
-//    public List<CharacterModel> findBySpeciesLike(String specie) {
-//        //Use a namedQuery for this query
-//    }
+    @GET
+    @Path("/chardb/species/{specie}")
+    public List<CharacterModel> findBySpeciesLike(@PathParam("specie") String s) {
+        return CharacterModel.find("#Character.getBySpecies", s).list();
+    }
 }
