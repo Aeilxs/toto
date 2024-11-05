@@ -1,5 +1,6 @@
 package com.course.model;
 
+import com.course.Houses;
 import com.course.dto.Character;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
@@ -18,7 +19,6 @@ import java.util.List;
         @NamedQuery(name = "Character.getBySpecies", query = "from CharacterModel where attributes.species like ?1")
 })
 public class CharacterModel extends PanacheEntity {
-
     /**
      * The unique identifier of the character. Must be a valid UUID v4.
      **/
@@ -28,15 +28,6 @@ public class CharacterModel extends PanacheEntity {
     private Character attributes = new Character();
     @jakarta.persistence.Transient
     private CharacterLinks links = new CharacterLinks();
-
-
-    public static List<CharacterModel> findByHouse(String houseName) {
-        return find("attributes.house", houseName).list();
-    }
-
-    public static List<CharacterModel> findBySpeciesLike(String species) {
-        return find("#Character.getBySpecies", species).list();
-    }
 
     @JsonProperty("id")
     public String getJsonId() {

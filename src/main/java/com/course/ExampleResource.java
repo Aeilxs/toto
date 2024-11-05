@@ -4,10 +4,13 @@ import com.course.api.CharactersApi;
 import com.course.model.CharacterModel;
 import com.course.model.InlineResponse2004;
 import com.course.model.InlineResponse2005;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
+import java.io.IOException;
 import java.util.List;
 
 @Path("/")
@@ -33,4 +36,41 @@ public class ExampleResource {
     public InlineResponse2005 findById(@PathParam("id") String id) {
         return charactersApi.getCharacter(id);
     }
+
+    @GET
+    @Path("/load")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String findById() throws IOException {
+        this.mapper();
+        return "coucou";
+
+    }
+
+    @Transactional
+    public void mapper() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<CharacterModel> list = objectMapper.readerForListOf(CharacterModel.class).readValue(getClass().getClassLoader().getResourceAsStream("hp.json"));
+        for (CharacterModel characterModel : list) {
+            characterModel.persist();
+        }
+    }
+
+    //GET on /
+//    public List<CharacterModel> findAll() {
+//
+//    }
+//    //GET on character/{id}
+//    public List<CharacterModel> findById(Long id) {
+//    }
+//    //GET on houses/{house}
+//    public List<CharacterModel> findByHouse(Houses house) {
+//    }
+//
+//    //GET on houses-count/{house}
+//    public int countByHouse(Houses house) {
+//    }
+//    //GET on species/{specie}
+//    public List<CharacterModel> findBySpeciesLike(String specie) {
+//        //Use a namedQuery for this query
+//    }
 }
