@@ -4,10 +4,7 @@ import com.course.Houses;
 import com.course.dto.Character;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.NamedQueries;
-import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 import java.util.List;
 
@@ -16,7 +13,8 @@ import java.util.List;
  **/
 @Entity
 @NamedQueries({
-        @NamedQuery(name = "Character.getBySpecies", query = "from CharacterModel where attributes.species like ?1")
+        @NamedQuery(name = "Character.getBySpecies", query = "from CharacterModel where attributes.species like ?1"),
+        @NamedQuery(name = "Character.getByHouse", query = "from CharacterModel where attributes.house like ?1")
 })
 public class CharacterModel extends PanacheEntity {
     /**

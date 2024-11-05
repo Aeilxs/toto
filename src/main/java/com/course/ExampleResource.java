@@ -5,6 +5,7 @@ import com.course.model.CharacterModel;
 import com.course.model.InlineResponse2004;
 import com.course.model.InlineResponse2005;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -37,17 +38,14 @@ public class ExampleResource {
         return charactersApi.getCharacter(id);
     }
 
-    @GET
-    @Path("/load")
-    @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public String findById() throws IOException {
+    @PostConstruct
+    public void init() throws IOException {
         this.load();
-        return "data loaded";
-
     }
 
-    private void load() throws IOException {
+    @Transactional
+    public void load() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         List<CharacterModel> list = objectMapper.readerForListOf(CharacterModel.class).readValue(getClass().getClassLoader().getResourceAsStream("hp.json"));
         for (CharacterModel characterModel : list) {
@@ -57,24 +55,33 @@ public class ExampleResource {
     }
 
     @GET
-    public List<CharacterModel> findAll() {
+    @Path("/chardb")
+    public List<CharacterModel> findAllDb() {
         return CharacterModel.findAll().list();
     }
 
-    //GET on character/{id}
     @GET
     @Path("/chardb/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<CharacterModel> findById(Long id) {
-        return CharacterModel.findById(id);
+    public CharacterModel findByIdDb(@PathParam("id") String id) {
+        return CharacterModel.find("jsonId", id).firstResult();
     }
-//    //GET on houses/{house}
-//    public List<CharacterModel> findByHouse(Houses house) {
-//    }
-//
-//    //GET on houses-count/{house}
-//    public int countByHouse(Houses house) {
-//    }
+
+    @GET
+    @Path("/chardb/houses/{house}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<CharacterModel> findByHouseDb(@PathParam("house") String house) {
+        return CharacterModel.find("#Character.getByHouse", house).list();
+    }
+
+    @GET
+    @Path("/chardb/houses-count/{house}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public long countByHouse(@PathParam("house") String house) {
+        return CharacterModel.find("#Character.getByHouse", house).count();
+    }
+
+
 //    //GET on species/{specie}
 //    public List<CharacterModel> findBySpeciesLike(String specie) {
 //        //Use a namedQuery for this query
