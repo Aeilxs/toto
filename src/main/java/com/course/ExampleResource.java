@@ -43,7 +43,7 @@ public class ExampleResource {
     @Transactional
     public String findById() throws IOException {
         this.load();
-        return "coucou";
+        return "data loaded";
 
     }
 
@@ -56,13 +56,18 @@ public class ExampleResource {
         }
     }
 
-    //GET on /
-//    public List<CharacterModel> findAll() {
-//
-//    }
-//    //GET on character/{id}
-//    public List<CharacterModel> findById(Long id) {
-//    }
+    @GET
+    public List<CharacterModel> findAll() {
+        return CharacterModel.findAll().list();
+    }
+
+    //GET on character/{id}
+    @GET
+    @Path("/chardb/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<CharacterModel> findById(Long id) {
+        return CharacterModel.findById(id);
+    }
 //    //GET on houses/{house}
 //    public List<CharacterModel> findByHouse(Houses house) {
 //    }
