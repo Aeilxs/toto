@@ -40,14 +40,14 @@ public class ExampleResource {
     @GET
     @Path("/load")
     @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
     public String findById() throws IOException {
-        this.mapper();
+        this.load();
         return "coucou";
 
     }
 
-    @Transactional
-    public void mapper() throws IOException {
+    private void load() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         List<CharacterModel> list = objectMapper.readerForListOf(CharacterModel.class).readValue(getClass().getClassLoader().getResourceAsStream("hp.json"));
         for (CharacterModel characterModel : list) {
